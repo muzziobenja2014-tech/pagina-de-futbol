@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="Tribuna: un espacio para vivir el fútbol, descubrir su historia, entender su táctica y explorar sus competiciones.">
+  <title>TRIBUNA | El fútbol, en todas sus formas</title>
+
+  <style>
+    /* =====================================================
+       SISTEMA DE DISEÑO
+    ===================================================== */
+    :root {
+      color-scheme: dark;
+      --bg: #0c110e;
+      --surface: #131b16;
+      --surface-alt: #19231c;
+      --text: #f0f5ee;
+      --muted: #9cae9f;
+      --line: #2a372d;
+      --accent: #c3f76c;
+      --accent-ink: #17210c;
+      --orange: #ffbb7b;
+      --header: rgba(12, 17, 14, .92);
+      --shadow: 0 24px 70px rgba(0, 0, 0, .22);
+      --radius: 22px;
+      --max: 1240px;
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f3f5ef;
+      --surface: #ffffff;
+      --surface-alt: #e9eee4;
+      --text: #18251d;
+      --muted: #5d7061;
+      --line: #d5dfd1;
+      --accent: #b4ed54;
+      --accent-ink: #1b2b0c;
+      --header: rgba(243, 245, 239, .94);
+      --shadow: 0 24px 70px rgba(29, 48, 27, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 105px; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    button, input, select { font: inherit; }
+    button, a, input, select { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button:focus-visible, a:focus-visible,
+    input:focus-visible, select:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 5px;
+    }
+    ::selection { background: var(--accent); color: var(--accent-ink); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { line-height: 1.1; letter-spacing: -.045em; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 14px; }
+    h3 { font-size: 1.3rem; }
+    p { color: var(--muted); }
+    .container { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
+    .section { padding-block: 80px; }
+    .section-border { border-top: 1px solid var(--line); }
+    .eyebrow {
+      display: block;
+      color: var(--accent);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    [data-theme="light"] .eyebrow { color: #486c16; }
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+    .section-heading p { max-width: 590px; margin-bottom: 0; }
+    .button {
+      border: 1px solid transparent;
+      border-radius: 100px;
+      padding: 13px 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 750;
+      font-size: .87rem;
+      transition: transform .2s, background .2s;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button.secondary { background: transparent; border-color: var(--line); color: var(--text); }
+    .button.small { padding: 8px 15px; font-size: .78rem; }
+    .icon-button {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--text);
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      padding: 5px 11px;
+      font-size: .7rem;
+      font-weight: 750;
+      color: var(--muted);
+    }
+    .muted { color: var(--muted); }
+    .skip-link {
+      position: fixed;
+      top: -90px;
+      left: 20px;
+      z-index: 100;
+      background: var(--accent);
+      color: var(--accent-ink);
+      padding: 12px 20px;
+    }
+    .skip-link:focus { top: 10px; }
+    [hidden] { display: none !important; }
+
+    /* =====================================================
+       CABECERA
+    ===================================================== */
+    .topline { border-bottom: 1px solid var(--line); font-size: .71rem; color: var(--muted); }
+    .topline .container { display: flex; justify-content: space-between; gap: 20px; padding-block: 9px; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--header);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner { min-height: 80px; display: flex; align-items: center; gap: 32px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 1.6rem; font-weight: 950; letter-spacing: -.07em; }
+    .brand-mark {
+      background: var(--accent);
+      color: var(--accent-ink);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      transform: rotate(-8deg);
+    }
+    .main-nav { margin-left: auto; display: flex; gap: 24px; }
+    .main-nav a { color: var(--muted); font-size: .82rem; font-weight: 650; }
+    .main-nav a:hover { color: var(--text); }
+    .header-actions { display: flex; gap: 9px; }
+    .menu-toggle { display: none; }
+
+    /* =====================================================
+       PORTADA
+    ===================================================== */
+    .hero { padding: 62px 0 42px; }
+    .hero-grid { display: grid; grid-template-columns: 1.02fr 1fr; gap: 54px; align-items: center; }
+    .hero h1 { font-size: clamp(3.5rem, 6.7vw, 6.15rem); font-weight: 900; margin-bottom: 26px; }
+    .hero h1 span { color: var(--accent); }
+    [data-theme="light"] .hero h1 span { color: #567e22; }
+    .hero-copy > p { max-width: 470px; font-size: 1.05rem; }
+    .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+    .hero-note { display: flex; gap: 12px; align-items: center; margin-top: 32px; font-size: .78rem; color: var(--muted); }
+    .mini-ball { font-size: 27px; }
+    .hero-visual {
+      min-height: 540px;
+      border-radius: 26px;
+      overflow: hidden;
+      position: relative;
+      background: #234532;
+      isolation: isolate;
+    }
+    .hero-visual img { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.08) 30%, rgba(4,17,10,.94));
+      z-index: -1;
+    }
+    .visual-top { position: absolute; top: 24px; left: 24px; right: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .visual-top .tag { background: #102519b8; color: #fff; border-color: #ffffff30; backdrop-filter: blur(10px); }
+    .visual-caption { position: absolute; bottom: 32px; left: 32px; right: 32px; color: #fff; }
+    .visual-caption h2 { font-size: 2.65rem; max-width: 380px; }
+    .visual-caption p { color: #c5d7c9; font-size: .9rem; max-width: 370px; }
+    .visual-caption a { color: #c3f76c; font-size: .83rem; font-weight: 700; }
+    .topic-strip {
+      display: flex; gap: 20px; justify-content: space-between;
+      padding: 25px 0; margin-top: 48px;
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      color: var(--muted); font-size: .73rem; letter-spacing: .1em; font-weight: 800;
+      flex-wrap: wrap;
+    }
+
+    /* =====================================================
+       MARCADORES Y FILTROS
+    ===================================================== */
+    .demo-note { font-size: .76rem; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 12px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+    .filter {
+      padding: 9px 16px; border: 1px solid var(--line); border-radius: 100px;
+      background: transparent; color: var(--muted); font-size: .8rem; font-weight: 650;
+    }
+    .filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+    .match-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .match-card { border: 1px solid var(--line); background: var(--surface); padding: 23px; border-radius: 18px; }
+    .match-top { display: flex; justify-content: space-between; gap: 10px; font-size: .68rem; color: var(--muted); margin-bottom: 23px; }
+    .match-status { color: var(--orange); }
+    .team-line { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: .91rem; }
+    .team-name { display: flex; align-items: center; gap: 10px; }
+    .crest {
+      width: 29px; height: 33px; border-radius: 7px 7px 13px 13px;
+      background: var(--surface-alt); border: 1px solid var(--line);
+      display: grid; place-items: center; font-size: .63rem; font-weight: 850;
+    }
+    .score { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .match-bottom { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 20px; color: var(--muted); font-size: .7rem; }
+
+    /* =====================================================
+       REVISTA
+    ===================================================== */
+    .news-tools { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+    .news-tools .filters { margin: 0; }
+    .search-wrap { flex: 0 1 290px; }
+    .search-wrap input {
+      width: 100%; border: 1px solid var(--line); border-radius: 100px;
+      background: var(--surface); color: var(--text); padding: 12px 17px; font-size: .82rem;
+    }
+    .article-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 23px; }
+    .article-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: transform .2s, box-shadow .2s; }
+    .article-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .article-image { height: 190px; position: relative; overflow: hidden; background: #233b29; }
+    .article-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .article-card:hover img { transform: scale(1.045); }
+    .article-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent, #07140c80); pointer-events: none; }
+    .bookmark { position: absolute; right: 13px; top: 13px; z-index: 2; background: #101a13e8; color: #fff; border-color: #ffffff30; }
+    .bookmark[aria-pressed="true"] { color: #c3f76c; border-color: #c3f76c; }
+    .article-body { padding: 24px; }
+    .article-meta { display: flex; justify-content: space-between; font-size: .67rem; color: var(--muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: .06em; }
+    .article-meta span:first-child { color: var(--orange); }
+    .article-body h3 { font-size: 1.4rem; line-height: 1.22; margin-bottom: 12px; }
+    .article-body p { font-size: .85rem; }
+    .text-button { padding: 0; background: none; border: 0; color: var(--text); font-size: .8rem; font-weight: 750; }
+    .text-button:hover { text-decoration: underline; }
+    .empty-state { text-align: center; padding: 50px; border: 1px dashed var(--line); border-radius: var(--radius); }
+
+    /* =====================================================
+       COMPETICIONES Y CLASIFICACIÓN
+    ===================================================== */
+    .competition-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 17px; }
+    .competition-card { padding: 27px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); }
+    .competition-icon { font-size: 1.8rem; margin-bottom: 30px; display: block; }
+    .competition-card h3 { font-size: 1.12rem; }
+    .competition-card p { font-size: .82rem; margin-bottom: 22px; }
+    .competition-card .tag { font-size: .63rem; }
+
+    .standings-layout { display: grid; grid-template-columns: 1.65fr 1fr; gap: 26px; }
+    .table-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .panel-header { padding: 23px; display: flex; justify-content: space-between; gap: 14px; align-items: center; border-bottom: 1px solid var(--line); }
+    .panel-header h3 { margin: 0; font-size: 1.05rem; }
+    select { color: var(--text); background: var(--surface-alt); border: 1px solid var(--line); padding: 8px; border-radius: 8px; font-size: .8rem; }
+    .table-scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: .84rem; white-space: nowrap; }
+    th, td { padding: 16px 14px; text-align: center; border-bottom: 1px solid var(--line); }
+    th { font-size: .66rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+    th:nth-child(2), td:nth-child(2) { text-align: left; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:first-child { background: var(--surface-alt); }
+    td:last-child { font-weight: 800; color: var(--accent); }
+    [data-theme="light"] td:last-child { color: #4c741b; }
+    .table-caption { padding: 14px 23px; font-size: .71rem; color: var(--muted); border-top: 1px solid var(--line); margin: 0; }
+    .editorial-panel { background: var(--accent); color: var(--accent-ink); border-radius: var(--radius); padding: 35px; display: flex; flex-direction: column; justify-content: space-between; }
+    .editorial-panel .eyebrow, .editorial-panel p { color: #394c25; }
+    .editorial-panel h3 { font-size: 2.4rem; }
+    .editorial-panel .button { background: #182610; color: #fff; align-self: start; }
+
+    /* =====================================================
+       TÁCTICA E HISTORIA
+    ===================================================== */
+    .tactics-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 65px; align-items: center; }
+    .pitch {
+      position: relative;
+      width: min(100%, 450px); aspect-ratio: 4 / 5; margin-inline: auto;
+      background: repeating-linear-gradient(0deg, #203d2a 0, #203d2a 12.5%, #24462f 12.5%, #24462f 25%);
+      border: 12px solid var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .pitch-boundary { position: absolute; inset: 20px; border: 1px solid #c2e3c65c; }
+    .halfway { position: absolute; top: 50%; left: 20px; right: 20px; border-top: 1px solid #c2e3c65c; }
+    .center-circle { position: absolute; top: 50%; left: 50%; width: 95px; height: 95px; border: 1px solid #c2e3c65c; border-radius: 50%; transform: translate(-50%, -50%); }
+    .penalty { position: absolute; width: 52%; height: 16%; left: 24%; border: 1px solid #c2e3c65c; }
+    .penalty.top { top: 20px; border-top: 0; }
+    .penalty.bottom { bottom: 20px; border-bottom: 0; }
+    .player {
+      position: absolute; transform: translate(-50%, -50%);
+      width: 34px; height: 34px; border-radius: 50%;
+      display: grid; place-items: center; background: #c3f76c; color: #14220a;
+      font-size: .75rem; font-weight: 850; box-shadow: 0 4px 15px #0005;
+      transition: left .5s, top .5s;
+    }
+    .player.goalkeeper { background: #ffbb7b; }
+    .tactics-copy p { font-size: .94rem; }
+    .tactical-points { padding: 0; list-style: none; margin-top: 26px; }
+    .tactical-points li { padding: 15px 0; border-top: 1px solid var(--line); display: flex; gap: 18px; font-size: .85rem; }
+    .tactical-points span { color: var(--accent); font-weight: 800; }
+    [data-theme="light"] .tactical-points span { color: #527822; }
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 44px; }
+    .timeline-item { border-top: 1px solid var(--line); padding-top: 28px; position: relative; }
+    .timeline-item::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); position: absolute; top: -5px; left: 0; }
+    .timeline-year { font-size: 2.7rem; letter-spacing: -.07em; font-weight: 900; color: var(--muted); }
+    .timeline-item h3 { font-size: 1.12rem; margin-top: 17px; }
+    .timeline-item p { font-size: .85rem; }
+
+    /* =====================================================
+       GUÍA, COMUNIDAD Y PIE
+    ===================================================== */
+    .guide-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 70px; }
+    details { border-bottom: 1px solid var(--line); padding: 22px 0; }
+    summary { font-weight: 700; cursor: pointer; padding-right: 20px; }
+    details p { font-size: .9rem; margin: 18px 0 0; }
+    .newsletter {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+      padding: 50px; background: var(--surface-alt);
+      border: 1px solid var(--line); border-radius: 26px;
+    }
+    .newsletter h2 { font-size: 2.45rem; }
+    .newsletter p { margin-bottom: 0; font-size: .9rem; }
+    .newsletter label { display: block; font-size: .8rem; margin-bottom: 10px; }
+    .subscribe-row { display: flex; gap: 9px; }
+    .subscribe-row input {
+      min-width: 0; flex: 1; border-radius: 100px;
+      border: 1px solid var(--line); background: var(--bg); color: var(--text);
+      padding: 14px 18px;
+    }
+    .newsletter .form-note { font-size: .7rem; margin-top: 12px; }
+    footer { padding: 60px 0 25px; border-top: 1px solid var(--line); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 35px; }
+    .footer-about p { max-width: 300px; font-size: .84rem; margin-top: 18px; }
+    .footer-column h3 { font-size: .85rem; letter-spacing: 0; margin-bottom: 20px; }
+    .footer-column a, .footer-column button { display: block; color: var(--muted); font-size: .8rem; margin-bottom: 10px; }
+    .footer-column button { border: 0; background: none; padding: 0; text-align: left; }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding-top: 25px; margin-top: 42px; font-size: .71rem; color: var(--muted); }
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: var(--accent-ink); padding: 13px 22px;
+      border-radius: 14px; box-shadow: var(--shadow); z-index: 80;
+      max-width: calc(100% - 32px); font-size: .85rem;
+    }
+    dialog {
+      width: min(720px, calc(100% - 30px)); max-height: 85vh;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--line); border-radius: 24px; padding: 35px;
+    }
+    dialog::backdrop { background: #000b; backdrop-filter: blur(5px); }
+    .dialog-header { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+    dialog h2 { font-size: 2rem; line-height: 1.15; margin-top: 20px; }
+    dialog p { font-size: .97rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* =====================================================
+       RESPONSIVE Y ACCESIBILIDAD
+    ===================================================== */
+    @media (min-width: 1000px) {
+      .article-card:first-child { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
+      .article-card:first-child .article-image { height: 100%; min-height: 320px; }
+      .article-card:first-child .article-body { display: flex; flex-direction: column; justify-content: center; padding: 32px; }
+      .article-card:first-child h3 { font-size: 1.85rem; }
+    }
+    @media (max-width: 1050px) {
+      .main-nav { gap: 15px; }
+      .header-inner { gap: 20px; }
+      .hero-grid { gap: 30px; }
+      .hero-visual { min-height: 480px; }
+      .competition-grid { grid-template-columns: repeat(2, 1fr); }
+      .tactics-layout { gap: 35px; }
+    }
+    @media (max-width: 800px) {
+      .container { width: min(var(--max), calc(100% - 32px)); }
+      .section { padding-block: 55px; }
+      .header-inner { min-height: 70px; }
+      .header-actions { margin-left: auto; }
+      .menu-toggle { display: grid; }
+      .main-nav {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        background: var(--bg); padding: 24px; border-bottom: 1px solid var(--line);
+        flex-direction: column; gap: 20px;
+      }
+      .main-nav.open { display: flex; }
+      .hero { padding-top: 40px; }
+      .hero-grid, .standings-layout, .tactics-layout, .guide-grid, .newsletter { grid-template-columns: 1fr; }
+      .hero h1 { max-width: 620px; }
+      .hero-visual { min-height: 440px; }
+      .match-grid { grid-template-columns: 1fr 1fr; }
+      .article-grid { grid-template-columns: repeat(2, 1fr); }
+      .news-tools { flex-direction: column; align-items: stretch; }
+      .search-wrap { flex-basis: auto; }
+      .timeline { grid-template-columns: repeat(2, 1fr); row-gap: 30px; }
+      .newsletter { gap: 25px; padding: 32px; }
+      .footer-grid { grid-template-columns: 2fr 1fr; }
+      .section-heading { align-items: start; }
+      .guide-grid { gap: 20px; }
+    }
+    @media (max-width: 500px) {
+      .topline .container span:last-child { display: none; }
+      .hero h1 { font-size: 3.5rem; }
+      .hero-visual { min-height: 400px; }
+      .visual-caption { left: 23px; right: 23px; }
+      .visual-caption h2 { font-size: 2.2rem; }
+      .match-grid, .article-grid, .competition-grid { grid-template-columns: 1fr; }
+      .section-heading { flex-direction: column; gap: 15px; }
+      .topic-strip { gap: 15px; justify-content: start; font-size: .62rem; }
+      .subscribe-row { flex-direction: column; }
+      .newsletter { padding: 25px; }
+      .timeline { gap: 20px; }
+      .timeline-year { font-size: 2.2rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 25px; }
+      .footer-about { grid-column: 1 / -1; }
+      .footer-bottom { flex-direction: column; }
+      .panel-header { flex-wrap: wrap; }
+      dialog { padding: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <div class="topline">
+    <div class="container">
+      <span>EL JUEGO CAMBIA. LA PASIÓN SE QUEDA.</span>
+      <span>Revista de fútbol · Edición de demostración</span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#inicio" class="brand" aria-label="Tribuna, inicio">
+        <span class="brand-mark" aria-hidden="true">↗</span> TRIBUNA
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="#partidos">Partidos</a>
+        <a href="#revista">Revista</a>
+        <a href="#competiciones">Competiciones</a>
+        <a href="#tactica">Táctica</a>
+        <a href="#historia">Historia</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-button" id="theme-toggle" aria-label="Activar modo claro" title="Cambiar tema">☀</button>
+        <button class="icon-button menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false" aria-label="Abrir menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero container" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Mucho más que noventa minutos</span>
+          <h1 id="hero-title">El mundo<br>se juega<br><span>con un balón.</span></h1>
+          <p>Historias que trascienden el marcador. Ideas que cambian el juego. Un lugar para quienes sienten el fútbol dentro y fuera del campo.</p>
+          <div class="hero-buttons">
+            <a class="button" href="#revista">Explorar la revista <span aria-hidden="true">↗</span></a>
+            <a class="button secondary" href="#partidos">Centro de partidos</a>
+          </div>
+          <div class="hero-note">
+            <span class="mini-ball" aria-hidden="true">⚽</span>
+            <span>De la primera patada en el barrio<br>a las grandes noches de estadio.</span>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img
+            src="[images.unsplash.com](https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1100&q=85)"
+            alt="Estadio de fútbol con el terreno de juego iluminado"
+            fetchpriority="high"
+          >
+          <div class="visual-top">
+            <span class="tag">ESPECIAL · CULTURA DEL FÚTBOL</span>
+            <span class="tag" aria-hidden="true">↗</span>
+          </div>
+          <div class="visual-caption">
+            <span class="eyebrow" style="color:#c3f76c">Donde todo cobra sentido</span>
+            <h2>Hay lugares que se llevan por dentro.</h2>
+            <p>El estadio como punto de encuentro, memoria colectiva y hogar de una pasión compartida.</p>
+            <a href="#historia">Descubre las raíces del juego →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-strip" aria-label="Temas de la revista">
+        <span>FÚTBOL INTERNACIONAL</span>
+        <span>FÚTBOL FEMENINO</span>
+        <span>ANÁLISIS TÁCTICO</span>
+        <span>CULTURA DE GRADA</span>
+        <span>FORMACIÓN</span>
+      </div>
+    </section>
+
+    <section class="section container" id="partidos">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">El marcador también cuenta historias</span>
+          <h2>Centro de partidos.</h2>
+          <p>Explora cómo se presenta una jornada, desde la previa hasta el resultado final.</p>
+        </div>
+        <span class="tag">DATOS FICTICIOS</span>
+      </div>
+
+      <div class="filters" id="match-filters" aria-label="Filtrar partidos">
+        <button class="filter" data-match="all" aria-pressed="true">Todos</button>
+        <button class="filter" data-match="finished" aria-pressed="false">Finalizados</button>
+        <button class="filter" data-match="scheduled" aria-pressed="false">Próximos</button>
+      </div>
+
+      <div class="match-grid" id="match-grid"></div>
+      <p class="demo-note" style="margin-top:20px">Equipos, horarios y resultados inventados para mostrar la interfaz. No son encuentros reales ni información en directo.</p>
+    </section>
+
+    <section class="section section-border" id="revista">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Una mirada más profunda</span>
+            <h2>Fútbol para leer.</h2>
+            <p>Táctica, identidad y aprendizaje. Artículos editoriales de muestra para disfrutar el juego desde otra perspectiva.</p>
+          </div>
+          <span class="tag" id="article-count" aria-live="polite"></span>
+        </div>
+
+        <div class="news-tools">
+          <div class="filters" id="article-filters" aria-label="Filtrar artículos">
+            <button class="filter" data-category="all" aria-pressed="true">Todo</button>
+            <button class="filter" data-category="Táctica" aria-pressed="false">Táctica</button>
+            <button class="filter" data-category="Cultura" aria-pressed="false">Cultura</button>
+            <button class="filter" data-category="Formación" aria-pressed="false">Formación</button>
+            <button class="filter" data-category="saved" aria-pressed="false">Guardados</button>
+          </div>
+          <div class="search-wrap">
+            <label for="article-search" class="sr-only">Buscar artículos</label>
+            <input id="article-search" type="search" placeholder="Buscar una historia..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="article-grid" id="article-grid"></div>
+        <div id="empty-state" class="empty-state" hidden>
+          <h3>No hay artículos para mostrar.</h3>
+          <p>Prueba otra búsqueda o guarda una historia con el botón de estrella.</p>
+          <button class="button small" id="reset-search">Ver todos los artículos</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container section-border" id="competiciones">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Un deporte, muchos escenarios</span>
+          <h2>El mapa del fútbol.</h2>
+          <p>Cada competición propone un viaje distinto. Estas son cuatro puertas de entrada para entenderlo.</p>
+        </div>
+      </div>
+      <div class="competition-grid">
+        <article class="competition-card">
+          <span class="competition-icon" aria-hidden="true">◉</span>
+          <h3>Ligas nacionales</h3>
+          <p>La constancia como desafío. Jornadas, rivalidades locales y una clasificación que cuenta la historia de toda una temporada.</p>
+          <span class="tag">REGULARIDAD · IDENTIDAD</span>
+        </article>
+        <article class="competition-card">
+          <span class="competition-icon" aria-hidden="true">◇</span>
+          <h3>Copas continentales</h3>
+          <p>Estilos que se cruzan y eliminatorias que cambian el pulso del torneo. El club representa también a su ciudad y a su afición.</p>
+          <span class="tag">CLUBES · ELIMINATORIAS</span>
+        </article>
+        <article class="competition-card">
+          <span class="competition-icon" aria-hidden="true">◎</span>
+          <h3>Selecciones</h3>
+          <p>Equipos que reúnen futbolistas de diferentes clubes. La adaptación, los ciclos y las ventanas internacionales marcan su preparación.</p>
+          <span class="tag">PAÍSES · ENCUENTRO</span>
+        </article>
+        <article class="competition-card">
+          <span class="competition-icon" aria-hidden="true">↗</span>
+          <h3>Fútbol formativo</h3>
+          <p>El resultado no es todo. Aprender a decidir, convivir y disfrutar del balón sostiene el desarrollo de cada futbolista.</p>
+          <span class="tag">CANTERA · APRENDIZAJE</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section container" id="clasificacion">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">La temporada, de un vistazo</span>
+          <h2>Cada punto importa.</h2>
+          <p>Una clasificación de ejemplo para explorar el rendimiento de los equipos.</p>
+        </div>
+      </div>
+
+      <div class="standings-layout">
+        <div class="table-panel">
+          <div class="panel-header">
+            <h3>Ligas de demostración</h3>
+            <label class="sr-only" for="league-select">Seleccionar clasificación</label>
+            <select id="league-select">
+              <option value="north">Liga del Norte</option>
+              <option value="south">Liga del Sur</option>
+            </select>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <caption class="sr-only">Clasificación ficticia: posición, equipo, partidos jugados, ganados, empatados, perdidos y puntos.</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Pos.</th>
+                  <th scope="col">Equipo</th>
+                  <th scope="col"><abbr title="Partidos jugados">PJ</abbr></th>
+                  <th scope="col"><abbr title="Ganados">G</abbr></th>
+                  <th scope="col"><abbr title="Empatados">E</abbr></th>
+                  <th scope="col"><abbr title="Perdidos">P</abbr></th>
+                  <th scope="col">Pts.</th>
+                </tr>
+              </thead>
+              <tbody id="standings-body"></tbody>
+            </table>
+          </div>
+          <p class="table-caption">Clasificación completa de una liga ficticia. Victoria: 3 puntos. Empate: 1 punto.</p>
+        </div>
+
+        <aside class="editorial-panel">
+          <div>
+            <span class="eyebrow">La otra lectura</span>
+            <h3>El resultado dice cuánto.<br>El juego explica cómo.</h3>
+            <p>Una tabla muestra posiciones, pero no siempre cuenta cómo se construyeron. La presión, la ocupación del espacio y las transiciones ayudan a completar la historia.</p>
+          </div>
+          <a class="button" href="#tactica">Aprende a mirar el juego ↗</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-border" id="tactica">
+      <div class="container tactics-layout">
+        <div>
+          <div class="pitch" role="img" id="pitch" aria-label="Esquema orientativo de una formación 4-3-3, atacando hacia arriba">
+            <div class="pitch-boundary"></div>
+            <div class="halfway"></div>
+            <div class="center-circle"></div>
+            <div class="penalty top"></div>
+            <div class="penalty bottom"></div>
+            <div id="players" aria-hidden="true"></div>
+          </div>
+          <p class="muted" style="text-align:center;font-size:.72rem;margin:14px 0 0">Esquema orientativo · Dirección de ataque hacia arriba</p>
+        </div>
+
+        <div class="tactics-copy">
+          <span class="eyebrow">La pizarra de Tribuna</span>
+          <h2>Entender el espacio.<br>Disfrutar el doble.</h2>
+          <p>Una formación es un punto de partida, no una fotografía permanente. El equipo cambia su estructura cuando ataca, defiende o pierde el balón.</p>
+          <div class="filters" id="formation-filters" aria-label="Seleccionar formación">
+            <button class="filter" data-formation="433" aria-pressed="true">4-3-3</button>
+            <button class="filter" data-formation="442" aria-pressed="false">4-4-2</button>
+            <button class="filter" data-formation="352" aria-pressed="false">3-5-2</button>
+          </div>
+          <h3 id="formation-title">4-3-3: amplitud y conexiones</h3>
+          <p id="formation-description" aria-live="polite"></p>
+
+          <ul class="tactical-points">
+            <li><span>01</span><div><strong>Con balón</strong><br>Busca apoyos, líneas de pase y espacios que obliguen al rival a decidir.</div></li>
+            <li><span>02</span><div><strong>Sin balón</strong><br>Observa las distancias entre líneas, las coberturas y la coordinación de la presión.</div></li>
+            <li><span>03</span><div><strong>En transición</strong><br>Los primeros movimientos tras recuperar o perder pueden cambiar toda la jugada.</div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container section-border" id="historia">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Las raíces de una pasión</span>
+          <h2>Un juego con memoria.</h2>
+          <p>Cuatro momentos para empezar a recorrer la historia del fútbol organizado. No explican todo, pero abren muchas historias.</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <article class="timeline-item">
+          <span class="timeline-year">1863</span>
+          <h3>Un lenguaje compartido</h3>
+          <p>La fundación de The Football Association en Inglaterra fue un paso decisivo para establecer reglas comunes del fútbol asociación.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="timeline-year">1930</span>
+          <h3>El primer Mundial</h3>
+          <p>Uruguay organizó y ganó la primera Copa Mundial masculina. Un torneo que abrió un nuevo capítulo para las selecciones.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="timeline-year">1955</span>
+          <h3>Europa conecta sus clubes</h3>
+          <p>Comenzó la Copa de Europa, antecedente de la Champions League, con una competición internacional entre clubes del continente.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="timeline-year">1991</span>
+          <h3>Una nueva cita mundial</h3>
+          <p>China acogió la primera Copa Mundial femenina organizada por la FIFA. Estados Unidos conquistó aquella edición inaugural.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-border" id="guia">
+      <div class="container guide-grid">
+        <div>
+          <span class="eyebrow">Para seguir aprendiendo</span>
+          <h2>El fútbol también<br>se pregunta.</h2>
+          <p>Conceptos esenciales para conversar, observar y comprender mejor lo que sucede en el campo.</p>
+          <span class="tag">GUÍA PARA TODOS LOS NIVELES</span>
+        </div>
+
+        <div>
+          <details open>
+            <summary>¿Por qué tener más posesión no garantiza ganar?</summary>
+            <p>Porque la posesión mide cuánto se tiene el balón, no el peligro creado. Importa dónde se recibe, cómo se progresa y qué ocasiones se generan. Un equipo puede circular mucho lejos del área rival y otro producir ocasiones claras con menos pases.</p>
+          </details>
+          <details>
+            <summary>¿Qué significa presionar en bloque?</summary>
+            <p>Significa coordinar los movimientos para reducir las opciones del rival. No basta con que una persona corra hacia el balón: sus compañeros deben cerrar líneas de pase, respaldar la acción y mantener distancias que permitan ayudarse.</p>
+          </details>
+          <details>
+            <summary>¿Qué es una transición?</summary>
+            <p>Es el cambio entre atacar y defender, o viceversa. Tras recuperar, un equipo puede intentar avanzar antes de que el rival se organice. Tras perder, puede presionar de inmediato o replegarse para proteger su portería.</p>
+          </details>
+          <details>
+            <summary>¿Qué diferencia hay entre sistema y estilo?</summary>
+            <p>El sistema describe una distribución de referencia, como el 4-3-3. El estilo reúne comportamientos: cómo se inicia el ataque, cuánto riesgo se asume, dónde se presiona o cómo se defiende el espacio. Dos equipos con el mismo sistema pueden jugar de formas muy diferentes.</p>
+          </details>
+          <details>
+            <summary>¿Cómo empezar a analizar un partido?</summary>
+            <p>Elige una sola pregunta: cómo sale un equipo desde atrás, quién ofrece amplitud o qué hace después de perder. Sigue varias secuencias, toma notas y busca patrones. Distingue una acción aislada de una conducta que se repite.</p>
+          </details>
+          <details>
+            <summary>¿Qué debería priorizar el fútbol de formación?</summary>
+            <p>Un entorno seguro, disfrute, aprendizaje progresivo y oportunidades de participar. La técnica y la comprensión del juego importan, pero también el descanso, el respeto y el desarrollo personal. Ganar un partido no sustituye esos objetivos.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" id="comunidad">
+      <div class="newsletter">
+        <div>
+          <span class="eyebrow">La conversación continúa</span>
+          <h2>Tu próxima lectura<br>empieza aquí.</h2>
+          <p>Un espacio pensado para recibir historias, ideas tácticas y cultura futbolera, sin perderse entre el ruido.</p>
+        </div>
+        <form id="newsletter-form">
+          <label for="newsletter-email">Prueba el formulario de la newsletter</label>
+          <div class="subscribe-row">
+            <input id="newsletter-email" name="email" type="email" placeholder="tu@email.com" required autocomplete="email" aria-describedby="newsletter-note">
+            <button class="button" type="submit">Probar envío ↗</button>
+          </div>
+          <p class="form-note" id="newsletter-note">Formulario de demostración. No envía, almacena ni suscribe tu correo.</p>
+          <p class="form-note" id="newsletter-result" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a href="#inicio" class="brand"><span class="brand-mark" aria-hidden="true">↗</span> TRIBUNA</a>
+          <p>El fútbol no termina cuando pita el árbitro. Sigue en las conversaciones, en la memoria y en las ganas de volver a jugar.</p>
+        </div>
+        <div class="footer-column">
+          <h3>Explorar</h3>
+          <a href="#partidos">Centro de partidos</a>
+          <a href="#revista">Revista</a>
+          <a href="#competiciones">Competiciones</a>
+          <a href="#clasificacion">Clasificación</a>
+        </div>
+        <div class="footer-column">
+          <h3>Aprender</h3>
+          <a href="#tactica">La pizarra</a>
+          <a href="#historia">Historia del fútbol</a>
+          <a href="#guia">Preguntas frecuentes</a>
+          <a href="#comunidad">Comunidad</a>
+        </div>
+        <div class="footer-column">
+          <h3>El proyecto</h3>
+          <button type="button" data-info="about">Sobre Tribuna</button>
+          <button type="button" data-info="privacy">Privacidad</button>
+          <button type="button" data-info="credits">Créditos y datos</button>
+          <button type="button" id="clear-preferences">Borrar preferencias</button>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Tribuna. Proyecto web de demostración.</span>
+        <span>Diseñado para todas las pantallas. Hecho para hablar de fútbol.</span>
+      </div>
+    </div>
+  </footer>
+
+  <dialog id="reading-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-header">
+      <span class="tag" id="dialog-category">TRIBUNA</span>
+      <button class="icon-button" id="close-dialog" aria-label="Cerrar lectura">✕</button>
+    </div>
+    <h2 id="dialog-title"></h2>
+    <div id="dialog-content"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <noscript>
+    <p class="container">Activa JavaScript para utilizar filtros, leer los artículos y ver los datos de demostración. Las secciones de historia y guía siguen disponibles sin JavaScript.</p>
+  </noscript>
+
+  <script>
+    "use strict";
+
+    /* =====================================================
+       UTILIDADES Y PREFERENCIAS LOCALES
+    ===================================================== */
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+    const storage = {
+      get(key, fallback) {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : JSON.parse(value);
+        } catch {
+          return fallback;
+        }
+      },
+      set(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      remove(key) {
+        try { localStorage.removeItem(key); } catch {}
+      }
+    };
+
+    let toastTimer;
+
+    function notify(message) {
+      clearTimeout(toastTimer);
+      $("#toast").textContent = message;
+      $("#toast").hidden = false;
+      toastTimer = setTimeout(() => { $("#toast").hidden = true; }, 3500);
+    }
+
+    function setPressed(container, selectedButton) {
+      container.querySelectorAll("button").forEach(button => {
+        button.setAttribute("aria-pressed", String(button === selectedButton));
+      });
+    }
+
+    const normalize = value => value
+      .toLocaleLowerCase("es")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    /* =====================================================
+       TEMA Y NAVEGACIÓN
+    ===================================================== */
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      const dark = theme === "dark";
+      $("#theme-toggle").textContent = dark ? "☀" : "☾";
+      $("#theme-toggle").setAttribute("aria-label", dark ? "Activar modo claro" : "Activar modo oscuro");
+      document.querySelector('meta[name="theme-color"]').content = dark ? "#101713" : "#f3f5ef";
+    }
+
+    const defaultTheme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    const storedTheme = storage.get("tribuna-theme", defaultTheme);
+    applyTheme(["light", "dark"].includes(storedTheme) ? storedTheme : defaultTheme);
+
+    $("#theme-toggle").addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      applyTheme(next);
+      storage.set("tribuna-theme", next);
+    });
+
+    function closeMenu() {
+      $("#main-nav").classList.remove("open");
+      $("#menu-toggle").setAttribute("aria-expanded", "false");
+      $("#menu-toggle").setAttribute("aria-label", "Abrir menú");
+    }
+
+    $("#menu-toggle").addEventListener("click", () => {
+      const open = $("#main-nav").classList.toggle("open");
+      $("#menu-toggle").setAttribute("aria-expanded", String(open));
+      $("#menu-toggle").setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+    });
+
+    $$("#main-nav a").forEach(link => link.addEventListener("click", closeMenu));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeMenu();
+    });
+    $("#year").textContent = new Date().getFullYear();
+
+    /* =====================================================
+       CENTRO DE PARTIDOS: TODOS LOS DATOS SON FICTICIOS
+    ===================================================== */
+    const matches = [
+      { league: "LIGA DEL NORTE", home: "Atlético Roble", away: "Unión del Faro", hs: 2, as: 1, status: "finished", note: "Jornada de ejemplo · Estadio del Bosque" },
+      { league: "LIGA DEL NORTE", home: "Deportivo Bruma", away: "Sporting Valle", hs: 1, as: 1, status: "finished", note: "Jornada de ejemplo · Campo de la Ribera" },
+      { league: "LIGA DEL SUR", home: "Estrella Austral", away: "Club Horizonte", hs: 3, as: 0, status: "finished", note: "Jornada de ejemplo · Parque Austral" },
+      { league: "COPA DEL PUERTO", home: "Marítimo Azul", away: "Ferroviario Sol", time: "18:30", status: "scheduled", note: "Horario ilustrativo · Sin fecha real" },
+      { league: "LIGA DEL SUR", home: "Unión Serrana", away: "Deportivo Cauce", time: "20:00", status: "scheduled", note: "Horario ilustrativo · Sin fecha real" },
+      { league: "COPA DEL PUERTO", home: "Atlético Aurora", away: "Racing del Lago", time: "21:15", status: "scheduled", note: "Horario ilustrativo · Sin fecha real" }
+    ];
+
+    function initials(name) {
+      return name.split(" ").filter(word => word.length > 3).map(word => word[0]).slice(0, 2).join("");
+    }
+
+    function renderMatches(filter = "all") {
+      const visible = matches.filter(match => filter === "all" || match.status === filter);
+      $("#match-grid").innerHTML = visible.map(match => `
+        <article class="match-card">
+          <div class="match-top">
+            <span>${match.league}</span>
+            <span class="match-status">${match.status === "finished" ? "FINAL · DEMO" : match.time + " · DEMO"}</span>
+          </div>
+          <div class="team-line">
+            <span class="team-name"><span class="crest" aria-hidden="true">${initials(match.home)}</span>${match.home}</span>
+            <span class="score">${match.hs ?? "-"}</span>
+          </div>
+          <div class="team-line">
+            <span class="team-name"><span class="crest" aria-hidden="true">${initials(match.away)}</span>${match.away}</span>
+            <span class="score">${match.as ?? "-"}</span>
+          </div>
+          <div class="match-bottom">${match.note}</div>
+        </article>
+      `).join("");
+    }
+
+    $("#match-filters").addEventListener("click", event => {
+      const button = event.target.closest("button[data-match]");
+      if (!button) return;
+      setPressed($("#match-filters"), button);
+      renderMatches(button.dataset.match);
+    });
+
+    renderMatches();
+
+    /* =====================================================
+       REVISTA Y LECTURA
+    ===================================================== */
+    const images = {
+      stadium: "[images.unsplash.com](https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=900&q=80)",
+      ball: "[images.unsplash.com](https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=80)",
+      field: "[images.unsplash.com](https://images.unsplash.com/photo-1459865264687-595d652de67e?auto=format&fit=crop&w=900&q=80)"
+    };
+
+    const articles = [
+      {
+        id: "space",
+        category: "Táctica",
+        title: "El espacio: ese jugador que no aparece en la alineación",
+        excerpt: "Por qué abrir el campo, fijar rivales y reconocer el momento de acelerar puede cambiar un ataque.",
+        image: images.field,
+        alt: "Campo de fútbol visto desde las gradas",
+        body: [
+          "Mirar solo el balón es una forma natural de seguir un partido. Sin embargo, gran parte de lo que determina una jugada sucede lejos de él: un extremo conserva la amplitud, un delantero arrastra a un central o un mediocampista se coloca fuera del campo visual de su marcador.",
+          "La amplitud obliga al rival a elegir. Si se abre para defender las bandas, puede conceder espacio interior. Si permanece estrecho, puede dejar libre a quien recibe junto a la línea. Ninguna decisión garantiza una ocasión, pero ambas generan preguntas que el ataque intenta aprovechar.",
+          "También importa la profundidad. Amenazar la espalda de la defensa puede impedir que esta avance con comodidad. Esa amenaza no exige recibir siempre: a veces un desmarque sirve para que otra persona encuentre tiempo entre líneas.",
+          "Para observarlo, sigue durante varias posesiones a un jugador que no tenga el balón. Pregúntate qué espacio ocupa, a quién obliga a moverse y qué opción aparece gracias a ese movimiento. El partido empezará a verse de otra manera."
+        ]
+      },
+      {
+        id: "stadium",
+        category: "Cultura",
+        title: "Un estadio es mucho más que sus gradas",
+        excerpt: "Rituales, recuerdos y caminos que convierten un lugar en parte de una identidad.",
+        image: images.stadium,
+        alt: "Estadio de fútbol iluminado",
+        body: [
+          "La experiencia de un estadio empieza antes de ver el césped. Está en el trayecto, en el encuentro con otras personas y en los pequeños rituales que se repiten incluso cuando cambia el equipo.",
+          "Para una afición, una grada puede guardar recuerdos de distintas generaciones. El mismo asiento se asocia a una primera visita, una remontada o una conversación que nada tenía que ver con el resultado.",
+          "Esa identidad también necesita cuidados. La hospitalidad con visitantes, la accesibilidad y el rechazo a la discriminación forman parte de una cultura futbolera que permite participar sin miedo.",
+          "El mejor ambiente no depende de convertir al rival en enemigo. Puede nacer de la creatividad, el humor y la energía compartida. El estadio cobra sentido cuando la pasión deja sitio a los demás."
+        ]
+      },
+      {
+        id: "learning",
+        category: "Formación",
+        title: "Aprender a jugar también es aprender a decidir",
+        excerpt: "La técnica se vuelve más útil cuando se conecta con la observación y la comprensión.",
+        image: images.ball,
+        alt: "Balón sobre el césped",
+        body: [
+          "Un buen control no es solo un gesto limpio. Su utilidad depende de lo que permite hacer después: proteger, girar, pasar o avanzar. Por eso, aprender técnica y aprender a leer el juego son procesos que se complementan.",
+          "Los ejercicios con oposición y objetivos sencillos pueden plantear decisiones parecidas a las del partido. El espacio, el número de participantes y las reglas de la tarea cambian los problemas que hay que resolver.",
+          "La persona que entrena puede ayudar con preguntas concretas: qué viste antes de recibir, qué compañero estaba libre o qué habría cambiado si orientabas el cuerpo de otra manera.",
+          "Equivocarse forma parte del aprendizaje. Un entorno que permite probar, comprender y volver a intentar favorece la autonomía. La formación no debería reducir a una persona al resultado de su última acción."
+        ]
+      },
+      {
+        id: "press",
+        category: "Táctica",
+        title: "Presionar no es correr: es llegar juntos",
+        excerpt: "La coordinación colectiva distingue una presión útil de una sucesión de esfuerzos aislados.",
+        image: images.field,
+        alt: "Terreno de juego de fútbol",
+        body: [
+          "Una carrera hacia quien lleva el balón puede iniciar una presión, pero no la completa. El resto del equipo debe decidir qué opciones cerrar y qué espacios está dispuesto a conceder.",
+          "Una señal de presión puede ser un pase hacia atrás, un control incómodo o una recepción junto a la banda. Son momentos en los que el rival puede tener menos posibilidades de progresar.",
+          "Si la primera línea salta y las siguientes no acompañan, aparecen distancias aprovechables. Si todas avanzan sin proteger la profundidad, un pase largo puede superar la presión.",
+          "Analizar una presión exige mirar el conjunto. Observa quién orienta la salida rival, quién cubre al compañero que salta y qué sucede si el balón supera la primera línea."
+        ]
+      },
+      {
+        id: "women",
+        category: "Cultura",
+        title: "Contar el fútbol femenino desde el propio juego",
+        excerpt: "Equipos, estilos y protagonistas: una conversación que merece profundidad.",
+        image: images.stadium,
+        alt: "Gradas y terreno de juego de un estadio",
+        body: [
+          "Hablar de fútbol femenino también significa hablar de estructuras defensivas, movimientos de ataque, rivalidades y decisiones técnicas. El análisis deportivo no debería quedar desplazado por comparaciones constantes con otras competiciones.",
+          "Cada equipo merece una mirada propia. Cómo construye sus ataques, quién conecta las líneas y de qué manera ajusta su presión son preguntas que ayudan a conocerlo.",
+          "El contexto importa: las condiciones de formación, los recursos y las oportunidades influyen en cualquier ecosistema deportivo. Explicarlo permite comprender mejor las trayectorias sin borrar la identidad del juego.",
+          "Una buena puerta de entrada consiste en seguir a un equipo durante varios partidos. Reconocer sus patrones y descubrir cómo responde a distintos rivales hace más rica la experiencia."
+        ]
+      },
+      {
+        id: "neighborhood",
+        category: "Cultura",
+        title: "El primer campo casi nunca tiene tribunas",
+        excerpt: "El fútbol del barrio y la imaginación de quienes encuentran un partido en cualquier espacio.",
+        image: images.ball,
+        alt: "Balón de fútbol sobre una superficie de césped",
+        body: [
+          "Dos mochilas pueden convertirse en una portería. Un terreno irregular puede obligar a inventar controles. Las reglas se adaptan al número de personas y al espacio disponible.",
+          "El fútbol informal permite negociar, organizarse y resolver desacuerdos. El partido existe porque quienes participan encuentran una manera de sostenerlo.",
+          "No hace falta romantizar la falta de recursos para reconocer el valor de esos encuentros. Contar con espacios seguros, abiertos e inclusivos amplía las oportunidades de jugar.",
+          "La relación con el balón puede continuar toda la vida sin pasar por una competición profesional. Jugar por el encuentro, el movimiento y la diversión también es una forma completa de vivir el fútbol."
+        ]
+      },
+      {
+        id: "rest",
+        category: "Formación",
+        title: "Entrenar mejor no siempre significa entrenar más",
+        excerpt: "La recuperación y la planificación también pertenecen al campo de entrenamiento.",
+        image: images.field,
+        alt: "Campo de fútbol preparado para jugar",
+        body: [
+          "La calidad de una sesión no se mide únicamente por el cansancio al terminar. Importan su objetivo, la adaptación a quienes participan y la relación con las cargas anteriores y posteriores.",
+          "La recuperación permite asimilar el trabajo. El descanso, una alimentación adecuada y la comunicación sobre molestias forman parte del proceso, especialmente en etapas de crecimiento.",
+          "No existe una planificación universal. La edad, la experiencia, el calendario y las condiciones individuales requieren ajustes por parte de profesionales cualificados.",
+          "En el fútbol formativo conviene observar también el disfrute y la motivación. Mantener una relación saludable con el deporte vale más que perseguir mejoras inmediatas a cualquier coste."
+        ]
+      },
+      {
+        id: "transitions",
+        category: "Táctica",
+        title: "El partido cambia cuando cambia la posesión",
+        excerpt: "Los segundos posteriores a una pérdida o recuperación revelan la organización de un equipo.",
+        image: images.ball,
+        alt: "Detalle de un balón de fútbol",
+        body: [
+          "Recuperar el balón no obliga a atacar rápido. A veces existe una ventaja que conviene explotar; otras, el equipo necesita asegurar el primer pase y reorganizarse.",
+          "Después de perder, presionar de inmediato puede ser útil si hay compañeros cerca y cobertura detrás. Si esas condiciones no existen, replegar puede proteger mejor los espacios peligrosos.",
+          "La preparación de una transición comienza antes del cambio de posesión. La ubicación de quienes permanecen detrás del balón durante el ataque condiciona la respuesta a una pérdida.",
+          "Para analizar estas acciones, detén mentalmente la jugada en el instante del cambio. Cuenta apoyos cercanos, observa la orientación de los jugadores y localiza el espacio libre. Después mira qué decisión toma el equipo."
+        ]
+      }
+    ];
+
+    const storedSaved = storage.get("tribuna-saved", []);
+    let saved = new Set(
+      Array.isArray(storedSaved)
+        ? storedSaved.filter(id => articles.some(article => article.id === id))
+        : []
+    );
+
+    let activeCategory = "all";
+    let searchTerm = "";
+
+    function renderArticles() {
+      const filtered = articles.filter(article => {
+        const categoryMatch = activeCategory === "all"
+          || (activeCategory === "saved" ? saved.has(article.id) : article.category === activeCategory);
+        const searchMatch = normalize(`${article.title} ${article.excerpt} ${article.category}`)
+          .includes(normalize(searchTerm));
+        return categoryMatch && searchMatch;
+      });
+
+      $("#article-count").textContent = `${filtered.length} ${filtered.length === 1 ? "HISTORIA" : "HISTORIAS"}`;
+      $("#empty-state").hidden = filtered.length > 0;
+
+      $("#article-grid").innerHTML = filtered.map(article => `
+        <article class="article-card">
+          <div class="article-image">
+            <img src="${article.image}" alt="${article.alt}" loading="lazy" width="900" height="600">
+            <button class="icon-button bookmark"
+              data-save="${article.id}"
+              aria-pressed="${saved.has(article.id)}"
+              aria-label="${saved.has(article.id) ? "Quitar de guardados" : "Guardar artículo"}: ${article.title}">
+              ${saved.has(article.id) ? "★" : "☆"}
+            </button>
+          </div>
+          <div class="article-body">
+            <div class="article-meta"><span>${article.category}</span><span>Lectura breve</span></div>
+            <h3>${article.title}</h3>
+            <p>${article.excerpt}</p>
+            <button class="text-button" data-read="${article.id}" aria-label="Leer: ${article.title}">Leer historia →</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    $("#article-filters").addEventListener("click", event => {
+      const button = event.target.closest("button[data-category]");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      setPressed($("#article-filters"), button);
+      renderArticles();
+    });
+
+    $("#article-search").addEventListener("input", event => {
+      searchTerm = event.target.value.trim();
+      renderArticles();
+    });
+
+    $("#reset-search").addEventListener("click", () => {
+      activeCategory = "all";
+      searchTerm = "";
+      $("#article-search").value = "";
+      setPressed($("#article-filters"), $('#article-filters [data-category="all"]'));
+      renderArticles();
+      $("#article-search").focus();
+    });
+
+    const dialog = $("#reading-dialog");
+
+    function openReading(title, category, paragraphs) {
+      $("#dialog-title").textContent = title;
+      $("#dialog-category").textContent = category;
+      $("#dialog-content").replaceChildren(...paragraphs.map(text => {
+        const paragraph = document.createElement("p");
+        paragraph.textContent = text;
+        return paragraph;
+      }));
+      dialog.showModal();
+      dialog.scrollTop = 0;
+      document.body.style.overflow = "hidden";
+    }
+
+    $("#close-dialog").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => { document.body.style.overflow = ""; });
+
+    dialog.addEventListener("click", event => {
+      const rect = dialog.getBoundingClientRect();
+      const outside = event.clientX < rect.left || event.clientX > rect.right
+        || event.clientY < rect.top || event.clientY > rect.bottom;
+      if (event.target === dialog && outside) dialog.close();
+    });
+
+    $("#article-grid").addEventListener("click", event => {
+      const saveButton = event.target.closest("[data-save]");
+      const readButton = event.target.closest("[data-read]");
+
+      if (saveButton) {
+        const id = saveButton.dataset.save;
+        const added = !saved.has(id);
+        if (added) saved.add(id); else saved.delete(id);
+
+        const persisted = storage.set("tribuna-saved", [...saved]);
+        renderArticles();
+
+        const replacement = $(`[data-save="${id}"]`);
+        if (replacement) replacement.focus();
+        else $('#article-filters [aria-pressed="true"]').focus();
+
+        notify(persisted
+          ? (added ? "Artículo guardado en este navegador." : "Artículo eliminado de tus guardados.")
+          : "Preferencia actualizada solo para esta sesión.");
+      }
+
+      if (readButton) {
+        const article = articles.find(item => item.id === readButton.dataset.read);
+        if (article) openReading(article.title, `${article.category} · EDITORIAL DE MUESTRA`, article.body);
+      }
+    });
+
+    renderArticles();
+
+    /* =====================================================
+       CLASIFICACIONES FICTICIAS
+       Cada liga tiene 4 equipos y 6 partidos por equipo.
+    ===================================================== */
+    const leagues = {
+      north: [
+        { name: "Atlético Roble", w: 4, d: 1, l: 1 },
+        { name: "Unión del Faro", w: 3, d: 1, l: 2 },
+        { name: "Deportivo Bruma", w: 2, d: 1, l: 3 },
+        { name: "Sporting Valle", w: 1, d: 1, l: 4 }
+      ],
+      south: [
+        { name: "Estrella Austral", w: 5, d: 1, l: 0 },
+        { name: "Unión Serrana", w: 3, d: 1, l: 2 },
+        { name: "Deportivo Cauce", w: 2, d: 0, l: 4 },
+        { name: "Club Horizonte", w: 1, d: 0, l: 5 }
+      ]
+    };
+
+    function renderStandings(key) {
+      const teams = [...leagues[key]].sort((a, b) => (b.w * 3 + b.d) - (a.w * 3 + a.d));
+      $("#standings-body").innerHTML = teams.map((team, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${team.name}</td>
+          <td>${team.w + team.d + team.l}</td>
+          <td>${team.w}</td>
+          <td>${team.d}</td>
+          <td>${team.l}</td>
+          <td>${team.w * 3 + team.d}</td>
+        </tr>
+      `).join("");
+    }
+
+    $("#league-select").addEventListener("change", event => renderStandings(event.target.value));
+    renderStandings("north");
+
+    /* =====================================================
+       PIZARRA INTERACTIVA: DIAGRAMA DE POSICIONES, NO ESTADÍSTICAS
+    ===================================================== */
+    const formations = {
+      "433": {
+        label: "4-3-3",
+        title: "4-3-3: amplitud y conexiones",
+        description: "Tres atacantes pueden ofrecer amplitud y profundidad. En el centro, un pivote y dos interiores facilitan conexiones, aunque sus alturas y funciones dependen de la propuesta del equipo.",
+        positions: [[50,88],[18,70],[39,74],[61,74],[82,70],[50,58],[30,43],[70,43],[17,23],[50,18],[83,23]]
+      },
+      "442": {
+        label: "4-4-2",
+        title: "4-4-2: parejas y equilibrio",
+        description: "Dos líneas de cuatro ofrecen una referencia clara para defender. Los dos delanteros pueden complementarse: uno fija o amenaza la profundidad mientras otro se acerca para conectar.",
+        positions: [[50,88],[18,71],[39,74],[61,74],[82,71],[15,47],[39,51],[61,51],[85,47],[36,23],[64,23]]
+      },
+      "352": {
+        label: "3-5-2",
+        title: "3-5-2: carrileros y superioridad central",
+        description: "Tres centrales sostienen una estructura con carrileros que recorren las bandas. En defensa, estos pueden bajar para formar una línea de cinco; en ataque, aportan amplitud.",
+        positions: [[50,88],[28,73],[50,76],[72,73],[12,44],[34,51],[50,59],[66,51],[88,44],[37,23],[63,23]]
+      }
+    };
+
+    $("#players").innerHTML = Array.from({ length: 11 }, (_, index) =>
+      `<span class="player ${index === 0 ? "goalkeeper" : ""}">${index + 1}</span>`
+    ).join("");
+
+    function renderFormation(key) {
+      const formation = formations[key];
+      $$("#players .player").forEach((player, index) => {
+        player.style.left = `${formation.positions[index][0]}%`;
+        player.style.top = `${formation.positions[index][1]}%`;
+      });
+      $("#formation-title").textContent = formation.title;
+      $("#formation-description").textContent = formation.description;
+      $("#pitch").setAttribute("aria-label", `Esquema orientativo de una formación ${formation.label}, atacando hacia arriba`);
+    }
+
+    $("#formation-filters").addEventListener("click", event => {
+      const button = event.target.closest("[data-formation]");
+      if (!button) return;
+      setPressed($("#formation-filters"), button);
+      renderFormation(button.dataset.formation);
+    });
+
+    renderFormation("433");
+
+    /* =====================================================
+       FORMULARIO Y DOCUMENTACIÓN DEL PROYECTO
+    ===================================================== */
+    $("#newsletter-form").addEventListener("submit", event => {
+      event.preventDefault();
+      $("#newsletter-result").textContent = "Validación completada. Esta es una demostración: no se ha enviado ni guardado tu correo.";
+      event.target.reset();
+    });
+
+    const info = {
+      about: {
+        title: "Un lugar para mirar más allá del marcador",
+        paragraphs: [
+          "Tribuna es un concepto de revista digital dedicada al fútbol en todas sus formas: táctica, cultura, historia y formación.",
+          "Esta página es una demostración de interfaz. Los artículos son textos editoriales de muestra y los módulos deportivos utilizan datos ficticios.",
+          "La búsqueda, los filtros, las lecturas, la pizarra y los favoritos funcionan en el navegador. No existe una cuenta de usuario ni una conexión con servicios de resultados."
+        ]
+      },
+      privacy: {
+        title: "Privacidad de esta demostración",
+        paragraphs: [
+          "La página guarda el tema visual y los identificadores de tus artículos favoritos en el almacenamiento local de este navegador, cuando está disponible.",
+          "El formulario valida el formato del correo, pero no lo envía ni lo guarda. Esta página no incluye herramientas de analítica ni publicidad.",
+          "Las fotografías se solicitan a images.unsplash.com. Esa conexión externa puede comunicar datos técnicos habituales, como tu dirección IP, al proveedor de imágenes.",
+          "Puedes eliminar las preferencias de esta página mediante el botón Borrar preferencias del pie. Para una publicación comercial sería necesario adaptar los avisos a los servicios realmente utilizados."
+        ]
+      },
+      credits: {
+        title: "Créditos, imágenes y datos",
+        paragraphs: [
+          "Las fotografías se cargan desde Unsplash y tienen una finalidad ambientadora. No representan necesariamente los equipos, historias o situaciones descritos.",
+          "Los nombres de los equipos de los marcadores y las clasificaciones, así como sus resultados y horarios, son ficticios.",
+          "Los textos de táctica y cultura son contenido editorial de ejemplo. Los hitos históricos se incluyen como introducción general, no como una cronología exhaustiva.",
+          "La interfaz utiliza tipografías del sistema, CSS y JavaScript nativos. Las imágenes requieren conexión a internet; no hay dependencias de bibliotecas externas."
+        ]
+      }
+    };
+
+    $$("[data-info]").forEach(button => {
+      button.addEventListener("click", () => {
+        const item = info[button.dataset.info];
+        openReading(item.title, "INFORMACIÓN DEL PROYECTO", item.paragraphs);
+      });
+    });
+
+    $("#clear-preferences").addEventListener("click", () => {
+      storage.remove("tribuna-theme");
+      storage.remove("tribuna-saved");
+      saved.clear();
+      applyTheme(defaultTheme);
+      renderArticles();
+      notify("Favoritos y preferencias restablecidos.");
+    });
+  </script>
+</body>
+</html>
